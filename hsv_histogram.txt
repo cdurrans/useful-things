@@ -1,0 +1,132 @@
+def histogramColors(img):
+    color = ('b','g','r')
+    for i,col in enumerate(color):
+        histr = cv2.calcHist([img],[i],None,[256],[0,256])
+        print('col: ',col,' max ',histr.max())
+        print('col: ',col,' std ',histr.std())
+        plt.plot(histr,color = col)
+        plt.xlim([0,256])
+    plt.show()
+
+
+def hsv_histograms(rgb_image):
+    # Convert to HSV
+    hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
+
+    # Create color channel histograms
+    h_hist = np.histogram(hsv[:,:,0], bins=32, range=(0, 180))
+    s_hist = np.histogram(hsv[:,:,1], bins=32, range=(0, 256))
+    v_hist = np.histogram(hsv[:,:,2], bins=32, range=(0, 256))
+    
+    # Generating bin centers
+    bin_edges = h_hist[1]
+    bin_centers = (bin_edges[1:]  + bin_edges[0:len(bin_edges)-1])/2
+
+    # Plot a figure with all three histograms
+    fig = plt.figure(figsize=(12,3))
+    plt.subplot(131)
+    plt.bar(bin_centers, h_hist[0])
+    plt.xlim(0, 180)
+    plt.title('H Histogram')
+    plt.subplot(132)
+    plt.bar(bin_centers, s_hist[0])
+    plt.xlim(0, 256)
+    plt.title('S Histogram')
+    plt.subplot(133)
+    plt.bar(bin_centers, v_hist[0])
+    plt.xlim(0, 256)
+    plt.title('V Histogram')
+    
+    return h_hist, s_hist, v_hist
+
+
+def detectCircles(img,param1=1.2,param2=100):
+    #img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    #plt.imshow(img)
+    # detect circles in the image
+    # ensure at least some circles were found
+    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, param1, param2)
+    if circles is not None:
+        # convert the (x, y) coordinates and radius of the circles to integers
+        circles = np.round(circles[0, :]).astype("int")
+        # loop over the (x, y) coordinates and radius of the circles
+        for (x, y, r) in circles:
+            # draw the circle in the output image, then draw a rectangle
+            # corresponding to the center of the circle
+            cv2.circle(output, (x, y), r, (0, 255, 0), 4)
+            cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+        # show the output image
+        f, circlesplt = plt.subplots(1, len(circles), figsize=(20,10))
+        for c in range(len(circlesplt)):
+            circlesplt[c].imshow(circles[c])
+    else:
+        print("no circles found")
+
+
+
+# Create a custom kernel
+imNumber = 2
+im = MISCLASSIFIED[imNumber][0]
+gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+sobel_y = np.array([
+                   [ -1, -1, -1, -1, -1, -1, -1, -1], 
+                   [ -1, 0, 0, 0, 0, 0, 0, -1], 
+                   [ -1, 0, 0, 0, 0, 0, 0, -1],
+                   [ -1, 0, 0, 0, 0, 0, 0, -1],
+                   [ -1, 0, 0, 0, 0, 0, 0, -1],
+                   [ -1, 0, 0, 0, 0, 0, 0, -1], 
+                   [ -1, -1, -1, -1, -1, -1, -1, -1]])
+
+sobel_x = np.array([[ -1, -1, -1, -1, -1], 
+                    [ 0, 0, 0, 0, 0], 
+                   [ 1, 1, 1, 1, 1]])
+
+# sobel_y = np.array([[ -1, 0,1], 
+#                    [ -1, 0,1], 
+#                    [ -1, 0,1], 
+#                    [ -1, 0,1]])
+
+# Filter the image using filter2D, which has inputs: (grayscale image, bit-depth, kernel)  
+filtered_image = cv2.filter2D(gray, -1, sobel_y)
+# filtered_image = cv2.filter2D(filtered_image, -1, sobel_x)
+
+plt.imshow(filtered_image, cmap='gray')
+
+
+
+def detect_color(image,color): #v2
+    hsv = cv2.cvtColor(test_im,cv2.COLOR_RGB2HSV)
+    if color == 'red':
+        # Range for lower red
+        lower_red = np.array([0,120,70])
+        upper_red = np.array([10,255,255])
+        mask1 = cv2.inRange(hsv, lower_red, upper_red)
+        # Range for upper range
+        lower_red = np.array([170,120,70])
+        upper_red = np.array([180,255,255])
+        mask2 = cv2.inRange(hsv,lower_red,upper_red)
+        # Generating the final mask to detect red color
+        mask1 = mask1+mask2
+        return mask1
+    elif color == "yellow":
+        # Range for lower red
+        lower_red = np.array([0,30,0])
+        upper_red = np.array([47,77,255])
+        mask1 = cv2.inRange(hsv, lower_red, upper_red)
+        return mask1
+    else:
+        # Range for lower green
+        lower_red = np.array([79,82,98])
+        upper_red = np.array([255,255,255])
+        mask1 = cv2.inRange(hsv, lower_red, upper_red)
+        return mask1
+
+
+plt.imshow(detect_color(im,'red'))
+
+
+# import numpy as np
+# from scipy.optimize import minimize
+# x0 = np.array([0.1,0.1,0.1])
+# res = minimize(runClassifier, x0, method='nelder-mead',options={'xatol': 0.25, 'disp': True})
+# print(res)
