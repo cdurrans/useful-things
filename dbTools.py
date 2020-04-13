@@ -111,3 +111,132 @@ def test_checkTableExists():
     assert Mydb.checkTableExists('EMP_MAIN') == True
     assert Mydb.checkTableExists('EMP_MAIN_made_up_table') == False
     print('Check Table Exists Test successful')
+
+
+
+
+
+# def truncate_table(table):
+#     connection = connect_to_w13107_GSC()
+#     cursor = connection.cursor()
+#     cursor.execute(" TRUNCATE TABLE " + table)
+#     connection.commit()
+#     cursor.close()
+#     connection.close()
+
+# def callStoredProcedure(procedure):
+#     try:
+#         connection = connect_to_w13107_GSC()
+#         connection.autocommit = True
+#         cursor = connection.cursor()
+#         if isinstance(procedure,str):
+#             cursor.execute('SET NOCOUNT ON; exec '+procedure)
+#             cursor.close()
+#             connection.close()
+#         else:
+#             print("procedure must be a string not a :", type(procedure.dtype))
+#             cursor.close()
+#             connection.close()
+#             return ValueError
+#     except Exception as e:
+#         print("Error: {}".format(str(e)))
+
+
+
+####Delete duplicates sql
+# delete x from (
+#   select *, rn=row_number() over (partition by [key Col] order by (SELECT NULL))
+#   from tb_GIS_SN 
+# ) x
+# where rn > 1;
+
+
+
+
+
+#####Connect to Access
+
+# def mdb_connect(db_file, old_driver=False):
+#     driver_ver = '*.mdb'
+#     if not old_driver:
+#         driver_ver += ', *.accdb'
+#     odbc_conn_str = ('DRIVER={Microsoft Access Driver (%s)}'
+#                      ';DBQ=%s;' %
+#                      (driver_ver, db_file))
+#     return pyodbc.connect(odbc_conn_str)
+
+# conn = mdb_connect(path)  # only absolute paths!
+# cursor = conn.cursor()
+# cursor.execute(sql)
+# recs = cursor.fetchall()
+# df = pd.DataFrame.from_records(recs, columns =['list','of','columns']) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Another method for inserting data. Good at handling errors because you have full control one record at a time. Slow insert speed though. Also annoying to code up.
+
+# connection = mt.connect_to_w13107_GSC()
+#     cursor = connection.cursor()
+#     row_added = 0
+#     for index, row in df.iterrows():
+#         if row['ResponseId'] not in list(already_ResponseId['ResponseId']) and pd.notna(row['ResponseId'] and pd.notna(row["ticket"])):
+#             try:
+#                 row_added +=1
+#                 cursor.execute("INSERT INTO dbo.[Qualtrics_preview]( \
+#                        [StartDate] \
+#                       ,[EndDate] \
+#                       ,[Status] \
+#                       ,[IPAddress] \
+#                       ,[Progress] \
+#                       ,[Duration (in minutes)] \
+#                       ,[Finished] \
+#                       ,[RecordedDate] \
+#                       ,[ResponseId] \
+#                 ,[LocationLatitude] \
+#                 ,[LocationLongitude] \
+#                 ,[DistributionChannel] \
+#                 ,[UserLanguage] \
+#                 ,[Q1] \
+#                 ,[Q2] \
+#                 ,[Q3] \
+#                 ,[Q4] \
+#                 ,[ticket] \
+#                 ,[Q2 - Topics]) \
+#                 values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+#                 row['StartDate']
+#                 ,row['EndDate']
+#                 ,row['Status']
+#                 ,row['IPAddress']
+#                 ,row['Progress']
+#                 ,row['Duration (in seconds)']
+#                 ,row['Finished']
+#                 ,row['RecordedDate']
+#                 ,row['ResponseId']
+#                 ,row['LocationLatitude']
+#                 ,row['LocationLongitude']
+#                 ,row['DistributionChannel']
+#                 ,row['UserLanguage']
+#                 ,row['Q1']
+#                 ,row['Q2']
+#                 ,row['Q3']
+#                 ,row['Q4']
+#                 ,row['ticket']
+#                 ,row['Q2 - Topics'])
+#                 connection.commit()
+#             except Exception as ex:
+#                 print(row)
+#                 print(ex)
+#                 continue
+#     print("Number of rows added survey: ",row_added)
+#     cursor.close()
+#     connection.close()
