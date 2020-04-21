@@ -1,0 +1,2 @@
+call powershell $taskName = 'Load_w_AgentActivityDaily_chris_test'; $action = New-ScheduledTaskAction -Execute 'F:/Shared Folders/DataImportFolder/custom_scripts/runPythonFileBatw_AgentActivityDaily_chris_test_2020_04_15.bat'; $trigger = New-ScheduledTaskTrigger -Daily -At 10am; Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -Description "Auto_generated_using_dataImportWizard.py";exit # $exists = Get-ScheduledTask -TaskName $taskName -TaskPath '\'; if($exists) {Unregister-ScheduledTask -TaskName $taskName -Confirm:$false $taskName};
+

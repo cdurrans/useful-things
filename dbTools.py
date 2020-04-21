@@ -68,6 +68,22 @@ class DBTools:
             cur.commit()
             cur.close()
     #
+    def executeQuery_nonData(self,query):
+        self.connect_to_Server()
+        cur = self.connection.cursor()
+        cur.execute(query)
+        cur.commit()
+        cur.close()
+    #
+    def commaSeperateItemsForSQL(self,items):
+        apos = "'"
+        if items:
+            itemsStr= "','".join(items)
+            itemsStr = "%s%s%s" % (apos,itemsStr,apos) 
+            return itemsStr
+        else:
+            return "%s%s%s" % (apos,items,apos)
+    #
     def bulkInsertTable(self, df, tableName, fileFolderLocation,ROWTERMINATOR='\n',FIELDTERMINATOR=',',FIRSTROW=2):
         for col in df.columns:
             df[col] = df[col].astype(str)

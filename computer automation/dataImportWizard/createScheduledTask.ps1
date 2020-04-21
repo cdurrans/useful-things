@@ -1,0 +1,2 @@
+$taskName = '__taskName__'; $action = New-ScheduledTaskAction -Execute '__programFileLocation__'; $trigger = New-ScheduledTaskTrigger -Daily -At __time__am; Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -Description "__description__";exit # $exists = Get-ScheduledTask -TaskName $taskName -TaskPath '\'; if($exists) {Unregister-ScheduledTask -TaskName $taskName -Confirm:$false $taskName};
+

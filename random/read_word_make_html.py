@@ -78,9 +78,8 @@ df.set_index('Language',inplace=True)
 # df.to_excel(base+'PleaseWork.xlsx')
 
 
-
-df = pd.read_excel(base+'PleaseWork.xlsx')
-
+# df = pd.read_excel('C:/Users/cdurrans/Downloads/loadEmailCovidUnitFinance.xlsx')
+# df.set_index('Language',inplace=True)
 insertTableMssql(df,'Qtr_temp','MLU',if_exists='append')
 
 
