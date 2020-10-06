@@ -2,7 +2,6 @@
 
 #TODO make it more reusable by accepting arguments for files
 
-
 #This was my first attempt to compare two data sets to see if there were differences between them.
 #I have since found datacompy which is really good and does a better job. See dataCompare.py in my repo
 
