@@ -2,20 +2,18 @@
 example usage
 python convert_image_base64.py --image="" --save=""
 """
-
-
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--image', required=True, type=int, default=20,
+parser.add_argument('--image', required=True, type=str, 
                     help='Image to convert')
-parser.add_argument('--save', required=True, type=int, default=500,
+parser.add_argument('--save', required=True, type=str, 
                     help='Save Location')
 args = parser.parse_args()
 
 # unpack
 image_location = args.image
-save_location = args.save)
+save_location = args.save
 
 import base64
 
