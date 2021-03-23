@@ -9,7 +9,7 @@ class Text_Categorizer:
         self.df['Found With'] = ""
         self.text_column = text_column
         self.set_category_column("my_label")
-        self.df[text_column + '_lower'] = df[text_column].str.lower()
+        self.df[text_column + '_lower'] = self.df[text_column].str.lower()
         self.length_of_data = len(self.df)
         self.print_results = True
         self.df['record_count'] = 1
@@ -26,7 +26,7 @@ class Text_Categorizer:
         self.df[self.category_column] = ""
     
     def label_data(self, text_search, category_label):
-        bool_true = self.df[self.text_column + '_lower'].str.contains(text_search)
+        bool_true = self.df[self.text_column + '_lower'].str.contains(text_search.lower())
         if self.print_results:
             bool_true_sum = bool_true.sum()
             print(f"Labeled {bool_true_sum} out of {self.length_of_data} or ({100 * round(bool_true_sum/self.length_of_data,2)}%)")
@@ -36,7 +36,7 @@ class Text_Categorizer:
             self.df[once_as] = False
         either_condition = bool_true | self.df[once_as]
         self.df.loc[either_condition, once_as] = True
-        self.df.loc[bool_true, 'Found With'] = self.df.loc[bool_true, 'Found With'] + text_search + '|'
+        self.df.loc[bool_true, 'Found With'] = self.df.loc[bool_true, 'Found With'] + text_search.lower() + '|'
     
     def summary(self):
         results = self.df.groupby([self.category_column])['record_count'].sum().reset_index()
