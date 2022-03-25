@@ -33,33 +33,45 @@ def reduce_mem_usage(props):
             IsInt = True
         
         # Make Integer/unsigned Integer datatypes
-        if IsInt:
-            if mn >= 0:
-                if mx < 255:
-                    props[col] = props[col].astype(np.uint8)
-                elif mx < 65535:
-                    props[col] = props[col].astype(np.uint16)
-                elif mx < 4294967295:
-                    props[col] = props[col].astype(np.uint32)
+        try:
+            if IsInt:
+                if mn >= 0:
+                    if mx < 255:
+                        props[col] = props[col].astype(np.uint8)
+                    elif mx < 65535:
+                        props[col] = props[col].astype(np.uint16)
+                    elif mx < 4294967295:
+                        props[col] = props[col].astype(np.uint32)
+                    else:
+                        props[col] = props[col].astype(np.uint64)
                 else:
-                    props[col] = props[col].astype(np.uint64)
+                    if mn > np.iinfo(np.int8).min and mx < np.iinfo(np.int8).max:
+                        props[col] = props[col].astype(np.int8)
+                    elif mn > np.iinfo(np.int16).min and mx < np.iinfo(np.int16).max:
+                        props[col] = props[col].astype(np.int16)
+                    elif mn > np.iinfo(np.int32).min and mx < np.iinfo(np.int32).max:
+                        props[col] = props[col].astype(np.int32)
+                    elif mn > np.iinfo(np.int64).min and mx < np.iinfo(np.int64).max:
+                        props[col] = props[col].astype(np.int64)    
+            
+            # Make float datatypes 32 bit
             else:
-                if mn > np.iinfo(np.int8).min and mx < np.iinfo(np.int8).max:
-                    props[col] = props[col].astype(np.int8)
-                elif mn > np.iinfo(np.int16).min and mx < np.iinfo(np.int16).max:
-                    props[col] = props[col].astype(np.int16)
-                elif mn > np.iinfo(np.int32).min and mx < np.iinfo(np.int32).max:
-                    props[col] = props[col].astype(np.int32)
-                elif mn > np.iinfo(np.int64).min and mx < np.iinfo(np.int64).max:
-                    props[col] = props[col].astype(np.int64)    
-        
-        # Make float datatypes 32 bit
-        else:
-            props[col] = props[col].astype(np.float32)
-        
-        # Print new column type
-        print("dtype after: ",props[col].dtype)
-        print("******************************")
+                props[col] = props[col].astype(np.float32)
+                if mn > np.iinfo(np.float16).min and mx < np.iinfo(np.float16).max:
+                    props[col] = props[col].astype(np.float16)
+                elif mn > np.iinfo(np.float32).min and mx < np.iinfo(np.float32).max:
+                    props[col] = props[col].astype(np.float32)
+                elif mn > np.iinfo(np.float64).min and mx < np.iinfo(np.float64).max:
+                    props[col] = props[col].astype(np.float64)
+                elif mn > np.iinfo(np.float128).min and mx < np.iinfo(np.float128).max:
+                    props[col] = props[col].astype(np.float128)    
+            # Print new column type
+            print("dtype after: ",props[col].dtype)
+            print("******************************")
+        except Exception as ex:
+            print(f"Failed to convert {col} with the following error:")
+            print(ex)
+            print("******************************")
 
     # Print final result
     print("___MEMORY USAGE AFTER COMPLETION:___")

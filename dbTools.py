@@ -172,6 +172,9 @@ def test_checkTableExists():
 
 #####Connect to Access
 
+# import pandas as pd 
+# import pyodbc
+
 # def mdb_connect(db_file, old_driver=False):
 #     driver_ver = '*.mdb'
 #     if not old_driver:
